@@ -1,4 +1,5 @@
 import os
+import sys
 from ctypes import CDLL
 
 def load_dll(dll_path):
@@ -8,7 +9,9 @@ def load_dll(dll_path):
         return None
 
     try:
+        print(f"Loading DLL: {dll_path}")
         dll = CDLL(dll_path)
+        print("DLL loaded successfully.")
         return dll
     except Exception as e:
         print(f"Failed to load DLL: {e}")
@@ -40,13 +43,18 @@ def main(dll_path):
     xll_path = dll_path.replace(".dll", ".xll")
     
     # Load the DLL
+    print(f"Checking DLL path: {dll_path}")
     dll = load_dll(dll_path)
     if not dll:
         return
     
-    # Create the XLL
     create_xll(dll_path, xll_path)
 
 if __name__ == "__main__":
-    dll_path = "reverse_32bit.dll"  # Provide the correct DLL path here
+    if len(sys.argv) != 2:
+        print("Usage: python script.py <path_to_dll>")
+        sys.exit(1)
+
+    dll_path = sys.argv[1]
+    print(f"Attempting to load DLL from path: {dll_path}")
     main(dll_path)
